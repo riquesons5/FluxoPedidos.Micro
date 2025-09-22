@@ -1,14 +1,14 @@
 ﻿namespace FluxoPedidos.Micro.Application.Base
 {
-    public class ServiceResult<T> where T : class
+    public class ServiceResult
     {
         public bool Sucesso { get; set; }
         public List<string> Erros { get; private set; } = [];
-        public T? Entidade { get; private set; } = null;
+        public object Entidade { get; private set; } = null;
 
-        public static ServiceResult<T> BemSucedido()
+        public static ServiceResult BemSucedido()
         {
-            return new ServiceResult<T>()
+            return new ServiceResult()
             {
                 Sucesso = true,
                 Erros = new List<string>(),
@@ -16,9 +16,9 @@
             };
         }
 
-        public static ServiceResult<T> BemSucedido(T entidade)
+        public static ServiceResult BemSucedido(object entidade)
         {
-            return new ServiceResult<T>()
+            return new ServiceResult()
             {
                 Sucesso = true,
                 Erros = new List<string>(),
@@ -26,9 +26,9 @@
             };
         }
 
-        public static ServiceResult<T> Falha(string mensagem, T entidade)
+        public static ServiceResult Falha(string mensagem, object entidade)
         {
-            return new ServiceResult<T>()
+            return new ServiceResult()
             {
                 Sucesso = false,
                 Erros = new List<string>() { mensagem },
@@ -36,9 +36,9 @@
             };
         }
 
-        public static ServiceResult<T> Falha(List<string> erros, T entidade)
+        public static ServiceResult Falha(List<string> erros, object entidade)
         {
-            return new ServiceResult<T>()
+            return new ServiceResult()
             {
                 Sucesso = false,
                 Erros = erros,
