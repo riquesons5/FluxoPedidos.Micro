@@ -21,5 +21,7 @@ namespace FluxoPedidos.Micro.Domain.Models.Pedidos.Itens
         public decimal Quantidade { get; private set; } = 0;
         public decimal Preco {  get; private set; } = 0;
         public decimal Total { get; private set; } = 0;
+
+        public Pedido Pedido { get; private set; }
     }
 }
