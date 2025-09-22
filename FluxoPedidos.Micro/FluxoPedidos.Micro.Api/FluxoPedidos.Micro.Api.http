@@ -1,0 +1,6 @@
+@FluxoPedidos.Micro.Api_HostAddress = http://localhost:5134
+
+GET {{FluxoPedidos.Micro.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
