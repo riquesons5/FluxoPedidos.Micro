@@ -2,7 +2,7 @@
 {
     public interface IAplicBase
     {
-        ServiceResult Recuperar();
-        ServiceResult RecuperarPorId(int id);
+        Task<ServiceResult> Recuperar();
+        Task<ServiceResult> RecuperarPorId(int id);
     }
 }

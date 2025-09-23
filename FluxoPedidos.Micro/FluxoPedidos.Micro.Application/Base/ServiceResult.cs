@@ -26,23 +26,21 @@
             };
         }
 
-        public static ServiceResult Falha(string mensagem, object entidade)
+        public static ServiceResult Falha(string mensagem)
         {
             return new ServiceResult()
             {
                 Sucesso = false,
-                Erros = new List<string>() { mensagem },
-                Entidade = entidade
+                Erros = new List<string>() { mensagem }
             };
         }
 
-        public static ServiceResult Falha(List<string> erros, object entidade)
+        public static ServiceResult Falha(List<string> erros)
         {
             return new ServiceResult()
             {
                 Sucesso = false,
-                Erros = erros,
-                Entidade = entidade
+                Erros = erros
             };
         }
     }

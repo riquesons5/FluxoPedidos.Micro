@@ -2,6 +2,7 @@
 using FluxoPedidos.Micro.Domain.Interfaces;
 using FluxoPedidos.Micro.Repository.Contexto;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FluxoPedidos.Micro.Repository.Repositorios
 {
@@ -14,6 +15,44 @@ namespace FluxoPedidos.Micro.Repository.Repositorios
         {
             _dbContexto = dbContexto;
             _dbEntidade = _dbContexto.Set<T>();
+        }
+
+        public virtual async Task<T> RecuperarPorId(int id)
+        {
+            return await _dbEntidade.FindAsync(id);
+        }
+
+        public virtual async Task<List<T>> RecuperarTodos()
+        {
+            return await _dbEntidade.ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbEntidade.AsNoTracking().Where(predicate).ToListAsync();
+        }
+
+        public virtual async Task Adicionar(T entidade)
+        {
+            _dbEntidade.Add(entidade);
+            await SaveChanges();
+        }
+
+        public virtual async Task Atualizar(T entidade)
+        {
+            _dbEntidade.Update(entidade);
+            await SaveChanges();
+        }
+
+        public virtual async Task Remover(int id)
+        {
+            _dbEntidade.Remove(new T { Id = id });
+            await SaveChanges();
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await _dbContexto.SaveChangesAsync();
         }
 
         public void Dispose()

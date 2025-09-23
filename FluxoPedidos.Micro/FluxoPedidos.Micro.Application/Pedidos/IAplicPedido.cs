@@ -5,6 +5,9 @@ namespace FluxoPedidos.Micro.Application.Pedidos
 {
     public interface IAplicPedido : IAplicBase
     {
-        Task CriarPedidoAsync(PedidoRabbitDto dto);
+        Task CriarPedidoAsync(PedidoDto pedidoDto);
+        Task<ServiceResult> Adicionar(PedidoDto pedidoDto);
+        Task<ServiceResult> Atualizar(int id, PedidoDto pedidoDto);
+        Task<ServiceResult> Deletar(int id);
     }
 }

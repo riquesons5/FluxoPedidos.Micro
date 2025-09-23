@@ -1,5 +1,4 @@
 ﻿using FluxoPedidos.Micro.Application.Base;
-using FluxoPedidos.Micro.Domain.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FluxoPedidos.Micro.Api.Controllers
@@ -8,7 +7,7 @@ namespace FluxoPedidos.Micro.Api.Controllers
     [Route("[controller]")]
     public class ControllerAplicacaoBase<Aplic> : ControllerBase where Aplic : IAplicBase
     {
-        private readonly Aplic _aplic;
+        protected readonly Aplic _aplic;
 
         public ControllerAplicacaoBase(Aplic aplic)
         {
@@ -16,22 +15,22 @@ namespace FluxoPedidos.Micro.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Recuperar()
+        public async Task<IActionResult> Recuperar()
         {
-            return Executar(() => _aplic.Recuperar());
+            return await Executar(async () => await _aplic.Recuperar());
         }
 
         [HttpGet("{id}")]
-        public IActionResult RecuperarPorId([FromRoute] int id)
+        public async Task<IActionResult> RecuperarPorId([FromRoute] int id)
         {
-            return Executar(() => _aplic.RecuperarPorId(id));
+            return await Executar(async () => await _aplic.RecuperarPorId(id));
         }
 
-        protected IActionResult Executar(Func<ServiceResult> acao)
+        protected async Task<IActionResult> Executar(Func<Task<ServiceResult>> acao)
         {
             try
             {
-                return RetornoBase(acao.Invoke());
+                return RetornoBase(await acao.Invoke());
             }
             catch (Exception ex)
             {
