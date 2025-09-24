@@ -37,7 +37,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos
             if (cliente == null)
                 return ServiceResult.Falha("Cliente não encontrado.");
 
-            var pedido = new Pedido(cliente.Id, pedidoDto.CodigoPedido);
+            var pedido = new Pedido(cliente.Id, pedidoDto.CodigoPedido.ToString());
 
             foreach (var itemDto in pedidoDto.Itens)
             {
@@ -65,7 +65,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos
 
             pedido.LimparItens();
 
-            pedido.Atualizar(cliente.Id, pedidoDto.CodigoPedido);
+            pedido.Atualizar(cliente.Id, pedidoDto.CodigoPedido.ToString());
 
             foreach (var itemDto in pedidoDto.Itens)
             {

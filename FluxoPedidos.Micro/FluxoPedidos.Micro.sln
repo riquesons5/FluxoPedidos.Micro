@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35913.81 d17.13
+VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxoPedidos.Micro.Application", "FluxoPedidos.Micro.Application\FluxoPedidos.Micro.Application.csproj", "{5F92821B-DB46-408D-B761-0E2B5CF7CC23}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxoPedidos.Micro.Repository", "FluxoPedidos.Micro.Repository\FluxoPedidos.Micro.Repository.csproj", "{3A9AA9D6-5C93-4C37-A5BA-96C287B4B3C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxoPedidos.Micro.Api", "FluxoPedidos.Micro.Api\FluxoPedidos.Micro.Api.csproj", "{A77DE17E-8785-4AAB-8E23-D8AD02A42EB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxoPedidos.Micro.Rabbit", "FluxoPedidos.Micro.Rabbit\FluxoPedidos.Micro.Rabbit.csproj", "{891137C3-CFF6-4B91-8A69-275C69E03D06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A77DE17E-8785-4AAB-8E23-D8AD02A42EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A77DE17E-8785-4AAB-8E23-D8AD02A42EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A77DE17E-8785-4AAB-8E23-D8AD02A42EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{891137C3-CFF6-4B91-8A69-275C69E03D06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{891137C3-CFF6-4B91-8A69-275C69E03D06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{891137C3-CFF6-4B91-8A69-275C69E03D06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{891137C3-CFF6-4B91-8A69-275C69E03D06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

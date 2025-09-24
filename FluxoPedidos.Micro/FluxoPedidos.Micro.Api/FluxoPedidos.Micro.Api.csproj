@@ -16,6 +16,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\FluxoPedidos.Micro.Application\FluxoPedidos.Micro.Application.csproj" />
 	  <ProjectReference Include="..\FluxoPedidos.Micro.Domain\FluxoPedidos.Micro.Domain.csproj" />
+	  <ProjectReference Include="..\FluxoPedidos.Micro.Rabbit\FluxoPedidos.Micro.Rabbit.csproj" />
 	  <ProjectReference Include="..\FluxoPedidos.Micro.Repository\FluxoPedidos.Micro.Repository.csproj" />
 	</ItemGroup>
 
