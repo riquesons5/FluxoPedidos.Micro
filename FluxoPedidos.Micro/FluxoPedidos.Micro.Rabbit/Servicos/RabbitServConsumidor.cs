@@ -4,6 +4,7 @@ using FluxoPedidos.Micro.Rabbit.Configuracoes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -19,11 +20,11 @@ namespace FluxoPedidos.Micro.Rabbit.Servicos
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<RabbitServConsumidor> _logger;
 
-        public RabbitServConsumidor(RabbitConfig config,
+        public RabbitServConsumidor(IOptions<RabbitConfig> config,
                                     ILogger<RabbitServConsumidor> logger,
                                     IServiceScopeFactory scopeFactory)
         {
-            _config = config;
+            _config = config.Value;
             _logger = logger;
             _scopeFactory = scopeFactory;
 

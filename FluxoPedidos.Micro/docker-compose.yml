@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  fluxo-pedidos:
+    build:
+      context: .
+      dockerfile: FluxoPedidos.Micro.Api/Dockerfile
+    container_name: fluxo-pedidos
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      # Banco de dados
+      ConnectionStrings__DefaultConnection: "User ID=postgres;Password=admin;Host=postgres;Port=5432;Database=fluxo_pedidos;Pooling=true;"
+      # RabbitMQ
+      RabbitConfig__HostName: "rabbitmq"
+      RabbitConfig__UserName: "guest"
+      RabbitConfig__Password: "guest"
+      RabbitConfig__FilaPedido: "fila_pedido"
+      RabbitConfig__FilaPedidoDeadLetter: "fila_pedido.deadletter"
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: fluxo_pedidos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"   # porta do RabbitMQ
+      - "15672:15672" # dashboard web
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  postgres_data:

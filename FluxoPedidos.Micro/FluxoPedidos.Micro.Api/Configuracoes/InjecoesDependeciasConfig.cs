@@ -6,6 +6,7 @@ using FluxoPedidos.Micro.Rabbit.Servicos;
 using FluxoPedidos.Micro.Repository.Contexto;
 using FluxoPedidos.Micro.Repository.Repositorios.Clientes;
 using FluxoPedidos.Micro.Repository.Repositorios.Pedidos;
+using Microsoft.Extensions.Options;
 
 namespace FluxoPedidos.Micro.Api.Configuracoes
 {
@@ -15,12 +16,7 @@ namespace FluxoPedidos.Micro.Api.Configuracoes
         {
             services.AddScoped<ContextoBanco>();
 
-            services.AddSingleton(new RabbitConfig
-            {
-                HostName = "localhost",
-                UserName = "guest",
-                Password = "guest"
-            });
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitConfig>>().Value);
 
             services.AddHostedService<RabbitServConsumidor>();
 
