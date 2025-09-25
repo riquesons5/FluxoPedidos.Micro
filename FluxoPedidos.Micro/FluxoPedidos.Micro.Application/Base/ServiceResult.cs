@@ -43,5 +43,13 @@
                 Erros = erros
             };
         }
+
+        public override string ToString()
+        {
+            if (Sucesso)
+                return string.Empty;
+
+            return $"{string.Join(";", Erros)}";
+        }
     }
 }

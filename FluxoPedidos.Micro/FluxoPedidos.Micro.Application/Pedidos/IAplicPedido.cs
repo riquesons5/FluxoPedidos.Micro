@@ -9,5 +9,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos
         Task<ServiceResult> Adicionar(PedidoDto pedidoDto);
         Task<ServiceResult> Atualizar(int id, PedidoDto pedidoDto);
         Task<ServiceResult> Deletar(int id);
+        Task<ServiceResult> Recuperar(PedidoParmetrosDto pedidoParametrosDto);
+        Task<ServiceResult> RecuperarPorClientes(int? clienteId);
     }
 }

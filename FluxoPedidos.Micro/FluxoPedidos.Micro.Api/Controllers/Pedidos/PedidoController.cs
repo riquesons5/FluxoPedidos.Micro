@@ -10,6 +10,18 @@ namespace FluxoPedidos.Micro.Api.Controllers.Pedidos
         {
         }
 
+        [HttpGet("BuscarComFiltros")]
+        public async Task<IActionResult> RecuperarComFiltros([FromQuery] PedidoParmetrosDto pedidoParametrosDto)
+        {
+            return await Executar(async () => await _aplic.Recuperar(pedidoParametrosDto));
+        }
+
+        [HttpGet("QuantidadePedidosPorCliente/{clienteId}")]
+        public async Task<IActionResult> QuantidadePedidosPorCliente([FromRoute] int? clienteId)
+        {
+            return await Executar(async () => await _aplic.RecuperarPorClientes(clienteId));
+        }
+
         [HttpPost]
         public async Task<IActionResult> AdicionarPedido([FromBody] PedidoDto pedidoDto)
         {

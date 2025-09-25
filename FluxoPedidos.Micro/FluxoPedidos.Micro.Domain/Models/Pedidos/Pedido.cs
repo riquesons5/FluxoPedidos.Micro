@@ -39,5 +39,10 @@ namespace FluxoPedidos.Micro.Domain.Models.Pedidos
             ClienteId = clienteId;
             NumeroPedido = numeroPedido;
         }
+
+        public void DefinirCliente(Cliente cliente)
+        {
+            Cliente = cliente;
+        }
     }
 }

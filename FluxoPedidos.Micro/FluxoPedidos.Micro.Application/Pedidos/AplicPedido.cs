@@ -3,6 +3,7 @@ using FluxoPedidos.Micro.Application.Pedidos.Dtos;
 using FluxoPedidos.Micro.Application.Pedidos.Views;
 using FluxoPedidos.Micro.Domain.Interfaces;
 using FluxoPedidos.Micro.Domain.Models.Pedidos;
+using System.Linq.Expressions;
 
 namespace FluxoPedidos.Micro.Application.Pedidos
 {
@@ -10,7 +11,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos
     {
         private readonly IPedidoRepositorio _pedidoRepositorio;
         private readonly IClienteRepositorio _clienteRepositorio;
-        public AplicPedido(IPedidoRepositorio pedidoRepositorio, 
+        public AplicPedido(IPedidoRepositorio pedidoRepositorio,
                            IClienteRepositorio clienteRepositorio)
         {
             _pedidoRepositorio = pedidoRepositorio;
@@ -20,7 +21,31 @@ namespace FluxoPedidos.Micro.Application.Pedidos
         {
             var pedidos = await _pedidoRepositorio.RecuperarTodos();
 
-            return ServiceResult.BemSucedido(pedidos.Select(p => PedidoView.Map(p)).ToList());
+            return ServiceResult.BemSucedido(pedidos.Select(PedidoView.Map).ToList());
+        }
+
+        public async Task<ServiceResult> Recuperar(PedidoParmetrosDto pedidoParametrosDto)
+        {
+            Expression<Func<Pedido, bool>> filtro = p => true;
+
+            if (pedidoParametrosDto.ClienteId.HasValue)
+                filtro = E(filtro, p => p.ClienteId == pedidoParametrosDto.ClienteId.Value);
+
+            if (!string.IsNullOrWhiteSpace(pedidoParametrosDto.NumeroPedido))
+                filtro = E(filtro, p => p.NumeroPedido == pedidoParametrosDto.NumeroPedido);
+
+            if (!string.IsNullOrWhiteSpace(pedidoParametrosDto.NomeCliente))
+                filtro = E(filtro, p => p.Cliente.Nome.ToUpper().Contains(pedidoParametrosDto.NomeCliente.ToUpper()));
+
+            if (pedidoParametrosDto.ItemId.HasValue)
+                filtro = E(filtro, p => p.Itens.Any(i => i.Id == pedidoParametrosDto.ItemId.Value));
+
+            if (!string.IsNullOrWhiteSpace(pedidoParametrosDto.Produto))
+                filtro = E(filtro, p => p.Itens.Any(i => i.Produto.ToUpper().Contains(pedidoParametrosDto.Produto.ToUpper())));
+
+            var pedidos = await _pedidoRepositorio.Buscar(filtro);
+
+            return ServiceResult.BemSucedido(pedidos.Select(PedidoView.Map).ToList());
         }
 
         public async Task<ServiceResult> RecuperarPorId(int id)
@@ -47,6 +72,8 @@ namespace FluxoPedidos.Micro.Application.Pedidos
             pedido.Totalizar();
 
             await _pedidoRepositorio.Adicionar(pedido);
+
+            pedido.DefinirCliente(cliente);
 
             return ServiceResult.BemSucedido(PedidoView.Map(pedido));
         }
@@ -83,7 +110,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos
         {
             var pedido = _pedidoRepositorio.RecuperarPorId(id);
 
-            if(pedido == null)
+            if (pedido == null)
                 return ServiceResult.Falha("Pedido não encontrado.");
 
             await _pedidoRepositorio.Remover(id);
@@ -91,9 +118,50 @@ namespace FluxoPedidos.Micro.Application.Pedidos
             return ServiceResult.BemSucedido();
         }
 
-        public Task CriarPedidoAsync(PedidoDto dto)
+        public async Task CriarPedidoAsync(PedidoDto dto)
         {
-            throw new NotImplementedException();
+            var resultado = await Adicionar(dto);
+
+            if (!resultado.Sucesso)
+                throw new Exception($"Erro ao inserir pedido: {resultado.ToString()}");
+        }
+
+        private static Expression<Func<T, bool>> E<T>(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2)
+        {
+            var parameter = Expression.Parameter(typeof(T));
+
+            var body = Expression.AndAlso(
+                Expression.Invoke(expr1, parameter),
+                Expression.Invoke(expr2, parameter));
+
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
+        }
+
+        public async Task<ServiceResult> RecuperarPorClientes(int? clienteId)
+        {
+            var pedidos = clienteId.HasValue ? 
+                await _pedidoRepositorio.Buscar(p => p.ClienteId == clienteId) :
+                await _pedidoRepositorio.Buscar(p => true);
+
+            if (!pedidos.Any())
+                return ServiceResult.Falha("Nenhum pedido encontrado.");
+
+            var retornoLista = pedidos
+                .GroupBy(p => new { p.ClienteId, p.Cliente.Nome })
+                .Select(g => new
+                {
+                    ClienteId = g.Key.ClienteId,
+                    NomeCliente = g.Key.Nome,
+                    QuantidadePedidos = g.Count(),
+                    TotalPedidos = g.Sum(p => p.Total),
+                    Pedidos = g.Select(p => new
+                    {
+                        NumeroPedido = p.NumeroPedido,
+                        Total = p.Total
+                    }).ToList()
+                }).ToList();
+
+            return ServiceResult.BemSucedido(retornoLista);
         }
     }
 }

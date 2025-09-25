@@ -27,7 +27,7 @@ namespace FluxoPedidos.Micro.Repository.Repositorios
             return await _dbEntidade.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate)
         {
             return await _dbEntidade.AsNoTracking().Where(predicate).ToListAsync();
         }

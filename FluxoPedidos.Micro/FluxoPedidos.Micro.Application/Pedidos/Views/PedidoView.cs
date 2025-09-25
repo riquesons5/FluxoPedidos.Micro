@@ -23,7 +23,7 @@ namespace FluxoPedidos.Micro.Application.Pedidos.Views
                 ClienteId = pedido.ClienteId,
                 Total = pedido.Total,
                 Cliente = ClienteView.Map(pedido.Cliente),
-                Itens = [.. pedido.Itens.Select(p => ItemView.Map(p))],
+                Itens = [.. pedido.Itens.Select(ItemView.Map)],
             };
         }
     }
