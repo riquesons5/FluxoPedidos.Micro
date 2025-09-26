@@ -22,6 +22,10 @@ builder.Services.AddDbContext<ContextoBanco>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
 var app = builder.Build();
 
 app.UseSwagger();
