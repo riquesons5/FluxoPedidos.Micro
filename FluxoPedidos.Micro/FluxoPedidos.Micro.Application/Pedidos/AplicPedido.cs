@@ -1,5 +1,6 @@
 ﻿using FluxoPedidos.Micro.Application.Base;
 using FluxoPedidos.Micro.Application.Pedidos.Dtos;
+using FluxoPedidos.Micro.Application.Pedidos.Validadores;
 using FluxoPedidos.Micro.Application.Pedidos.Views;
 using FluxoPedidos.Micro.Domain.Interfaces;
 using FluxoPedidos.Micro.Domain.Models.Pedidos;
@@ -11,11 +12,14 @@ namespace FluxoPedidos.Micro.Application.Pedidos
     {
         private readonly IPedidoRepositorio _pedidoRepositorio;
         private readonly IClienteRepositorio _clienteRepositorio;
+        private readonly IValidadorPedido _validadorPedido;
         public AplicPedido(IPedidoRepositorio pedidoRepositorio,
-                           IClienteRepositorio clienteRepositorio)
+                           IClienteRepositorio clienteRepositorio,
+                           IValidadorPedido validadorPedido)
         {
             _pedidoRepositorio = pedidoRepositorio;
             _clienteRepositorio = clienteRepositorio;
+            _validadorPedido = validadorPedido;
         }
         public async Task<ServiceResult> Recuperar()
         {
@@ -71,6 +75,11 @@ namespace FluxoPedidos.Micro.Application.Pedidos
 
             pedido.Totalizar();
 
+            var validar = _validadorPedido.Validar(pedido);
+
+            if (validar != null)
+                return ServiceResult.Falha(validar);
+
             await _pedidoRepositorio.Adicionar(pedido);
 
             pedido.DefinirCliente(cliente);
@@ -100,6 +109,11 @@ namespace FluxoPedidos.Micro.Application.Pedidos
             }
 
             pedido.Totalizar();
+
+            var validar = _validadorPedido.Validar(pedido);
+
+            if (validar != null)
+                return ServiceResult.Falha(validar);
 
             await _pedidoRepositorio.Atualizar(pedido);
 

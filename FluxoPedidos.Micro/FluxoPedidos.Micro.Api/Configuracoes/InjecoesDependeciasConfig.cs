@@ -1,5 +1,7 @@
 ﻿using FluxoPedidos.Micro.Application.Clientes;
+using FluxoPedidos.Micro.Application.Clientes.Validadores;
 using FluxoPedidos.Micro.Application.Pedidos;
+using FluxoPedidos.Micro.Application.Pedidos.Validadores;
 using FluxoPedidos.Micro.Domain.Interfaces;
 using FluxoPedidos.Micro.Rabbit.Configuracoes;
 using FluxoPedidos.Micro.Rabbit.Servicos;
@@ -21,8 +23,10 @@ namespace FluxoPedidos.Micro.Api.Configuracoes
             services.AddHostedService<RabbitServConsumidor>();
 
             services.AddScoped<IAplicCliente, AplicCliente>();
+            services.AddScoped<IValidadorCliente, ValidadorCliente>();
             services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
             services.AddScoped<IAplicPedido, AplicPedido>();
+            services.AddScoped<IValidadorPedido, ValidadorPedido>();
             services.AddScoped<IPedidoRepositorio, PedidoRepositorio>();
 
             return services;

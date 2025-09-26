@@ -1,5 +1,6 @@
 ﻿using FluxoPedidos.Micro.Application.Base;
 using FluxoPedidos.Micro.Application.Clientes.Dtos;
+using FluxoPedidos.Micro.Application.Clientes.Validadores;
 using FluxoPedidos.Micro.Application.Clientes.Views;
 using FluxoPedidos.Micro.Domain.Interfaces;
 using FluxoPedidos.Micro.Domain.Models.Clientes;
@@ -9,9 +10,12 @@ namespace FluxoPedidos.Micro.Application.Clientes
     public class AplicCliente : IAplicCliente
     {
         private readonly IClienteRepositorio _clienteRepositorio;
-        public AplicCliente(IClienteRepositorio clienteRepositorio)
+        private readonly IValidadorCliente _validadorCliente;
+        public AplicCliente(IClienteRepositorio clienteRepositorio, 
+                            IValidadorCliente validadorCliente)
         {
             _clienteRepositorio = clienteRepositorio;
+            _validadorCliente = validadorCliente;
         }
 
         public async Task<ServiceResult> Recuperar()
@@ -32,6 +36,11 @@ namespace FluxoPedidos.Micro.Application.Clientes
         {
             var cliente = new Cliente(clienteDto.Nome, clienteDto.Documento);
 
+            var validar = _validadorCliente.Validar(cliente);
+
+            if(validar != null)
+                return ServiceResult.Falha(validar);
+
             await _clienteRepositorio.Adicionar(cliente);
 
             return ServiceResult.BemSucedido(ClienteView.Map(cliente));
@@ -45,6 +54,11 @@ namespace FluxoPedidos.Micro.Application.Clientes
                 return ServiceResult.Falha("Cliente não encontrado.");
 
             cliente.Atualizar(clienteDto.Nome, clienteDto.Documento);
+
+            var validar = _validadorCliente.Validar(cliente);
+
+            if (validar != null)
+                return ServiceResult.Falha(validar);
 
             await _clienteRepositorio.Atualizar(cliente);
 
