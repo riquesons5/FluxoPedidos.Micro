@@ -11,6 +11,7 @@ namespace FluxoPedidos.Micro.Domain.Interfaces
         Task Atualizar(T entity);
         Task Remover(int id);
         Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate);
+        Task<bool> Existe(Expression<Func<T, bool>> predicate);
         Task<int> SaveChanges();
     }
 }

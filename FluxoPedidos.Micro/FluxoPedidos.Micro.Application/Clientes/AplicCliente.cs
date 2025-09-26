@@ -41,6 +41,9 @@ namespace FluxoPedidos.Micro.Application.Clientes
             if(validar != null)
                 return ServiceResult.Falha(validar);
 
+            if(await _clienteRepositorio.Existe(p => p.Documento == cliente.Documento))
+                return ServiceResult.Falha($"Já existe um cliente cadastrado com o documento nº {cliente.Documento}");
+
             await _clienteRepositorio.Adicionar(cliente);
 
             return ServiceResult.BemSucedido(ClienteView.Map(cliente));

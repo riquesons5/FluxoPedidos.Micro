@@ -80,6 +80,9 @@ namespace FluxoPedidos.Micro.Application.Pedidos
             if (validar != null)
                 return ServiceResult.Falha(validar);
 
+            if (await _pedidoRepositorio.Existe(p => p.NumeroPedido == pedido.NumeroPedido))
+                return ServiceResult.Falha($"Já existe um pedido cadastrado com o nº {pedido.NumeroPedido}");
+
             await _pedidoRepositorio.Adicionar(pedido);
 
             pedido.DefinirCliente(cliente);

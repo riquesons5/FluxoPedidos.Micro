@@ -32,6 +32,11 @@ namespace FluxoPedidos.Micro.Repository.Repositorios
             return await _dbEntidade.AsNoTracking().Where(predicate).ToListAsync();
         }
 
+        public virtual async Task<bool> Existe(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbEntidade.AsNoTracking().AnyAsync(predicate);
+        }
+
         public virtual async Task Adicionar(T entidade)
         {
             _dbEntidade.Add(entidade);
